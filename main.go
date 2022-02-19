@@ -39,7 +39,7 @@ func reducer(gap int) int {
 	if gap < 9 {
 		return 1
 	}
-	return gap / 4
+	return gap >> 2
 }
 
 type toWork struct {
