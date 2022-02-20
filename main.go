@@ -1,11 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"math/rand"
-)
-
 // Nodes a generic type for slice of any type.
 
 //type Nodes[T toWork] []T
@@ -13,7 +7,6 @@ import (
 // Sort sorts does not mind about the fields or values of T.
 func Sort(input []toWork) {
 	length := len(input)
-	log.Println("length", length)
 
 	var i1, i2 int
 	rightGap = float64(length - 1)
@@ -25,10 +18,57 @@ func Sort(input []toWork) {
 			}
 			i2++
 		}
-		if gap > 2000 {
-			log.Println("gap", gap)
-			log.Println("gap must be", rightGap)
+	}
+	//log.Println(input)
+}
+
+type Node struct {
+	leftNode  *Node
+	rightNode *Node
+	id        int
+}
+
+type treeOfNodes struct {
+	*Node
+	input []toWork
+}
+
+func SortByTree(input []toWork) {
+	var tree treeOfNodes
+	for _, value := range input {
+		if tree.Node != nil {
+			tree.addNode(value.id)
+		} else {
+			tree.Node = &Node{id: value.id}
 		}
+	}
+	tree.Print(input, 0)
+	//log.Println(input)
+}
+
+func (n *Node) Print(input []toWork, idx int) {
+	if n != nil {
+		n.leftNode.Print(input, idx)
+		input[idx].id = n.id
+		idx++
+		n.rightNode.Print(input, idx)
+	}
+}
+
+func (n *Node) addNode(id int) {
+	if id > n.id {
+		if n.rightNode == nil {
+			n.rightNode = &Node{id: id}
+		} else {
+			n.rightNode.addNode(id)
+		}
+		return
+	}
+
+	if n.leftNode == nil {
+		n.leftNode = &Node{id: id}
+	} else {
+		n.leftNode.addNode(id)
 	}
 }
 
@@ -46,37 +86,38 @@ type toWork struct {
 	id int
 }
 
+var testSlice = []toWork{
+	{id: 4},
+	{id: 10},
+	{id: 12},
+	{id: 2},
+	{id: 3},
+	{id: 20},
+	{id: 22},
+	{id: 25},
+	{id: 5},
+	{id: 9},
+	{id: 15},
+	{id: 222},
+	{id: 1},
+}
+
 func main() {
-	var testSlice = []toWork{
-		{id: 4},
-		{id: 10},
-		{id: 12},
-		{id: 2},
-		{id: 3},
-		{id: 20},
-		{id: 22},
-		{id: 25},
-		{id: 5},
-		{id: 9},
-		{id: 15},
-		{id: 222},
-		{id: 1},
-	}
 
 	Sort(testSlice)
 
-	log.Println(testSlice)
+	//var testSlice2 = make([]toWork, 5000)
+	//for key := range testSlice2 {
+	//	testSlice2[key].id = rand.Int()
+	//}
+	//Sort(testSlice2)
+	//for key := range testSlice2 {
+	//	if key != 0 {
+	//		if testSlice2[key].id < testSlice2[key-1].id {
+	//			fmt.Println("algorithm does not work")
+	//		}
+	//	}
+	//}
 
-	var testSlice2 = make([]toWork, 5000)
-	for key := range testSlice2 {
-		testSlice2[key].id = rand.Int()
-	}
-	Sort(testSlice2)
-	for key := range testSlice2 {
-		if key != 0 {
-			if testSlice2[key].id < testSlice2[key-1].id {
-				fmt.Println("algorithm does not work")
-			}
-		}
-	}
+	SortByTree(testSlice)
 }
