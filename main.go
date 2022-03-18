@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Nodes a generic type for slice of any type.
 
 //type Nodes[T toWork] []T
@@ -9,7 +11,7 @@ func Sort(input []toWork) {
 	length := len(input)
 
 	var i1, i2 int
-	rightGap = float64(length - 1)
+	//rightGap = float64(length - 1)
 	for gap := length - 1; gap > 0; gap -= reducer(gap) {
 		for i1, i2 = 0, gap; i2 < length; i1++ {
 			if input[i1].id > input[i2].id {
@@ -75,7 +77,7 @@ func (n *Node) addNode(id int) {
 var rightGap float64
 
 func reducer(gap int) int {
-	rightGap = float64(int((rightGap / 1.3) + .5))
+	//rightGap = float64(int((rightGap / 1.3) + .5))
 	if gap < 9 {
 		return 1
 	}
@@ -86,10 +88,24 @@ type toWork struct {
 	id int
 }
 
-var testSlice = []toWork{
-	{id: 4},
-	{id: 10},
+type toWorkSLice []toWork
+
+func (t toWorkSLice) Less(i int, j int) bool {
+	return t[i].id < t[j].id
+}
+
+func (t toWorkSLice) Swap(i int, j int) {
+	t[i], t[j] = t[j], t[i]
+}
+
+func (t toWorkSLice) Len() int {
+	return len(t)
+}
+
+var testSlice = toWorkSLice{
 	{id: 12},
+	{id: 10},
+	{id: 4},
 	{id: 2},
 	{id: 3},
 	{id: 20},
@@ -100,6 +116,22 @@ var testSlice = []toWork{
 	{id: 15},
 	{id: 222},
 	{id: 1},
+}
+
+var rightSlice = toWorkSLice{
+	{id: 1},
+	{id: 2},
+	{id: 3},
+	{id: 4},
+	{id: 5},
+	{id: 9},
+	{id: 10},
+	{id: 12},
+	{id: 15},
+	{id: 20},
+	{id: 22},
+	{id: 25},
+	{id: 222},
 }
 
 func main() {
@@ -120,4 +152,23 @@ func main() {
 	//}
 
 	SortByTree(testSlice)
+}
+
+func strStr(haystack string, needle string) int {
+	if len(needle) == 0 || haystack == needle {
+		return 0
+	}
+	if len(needle) > len(haystack) {
+		return -1
+	}
+	var lastHaystackIndex = len(haystack) - len(needle) + 1
+	fmt.Println("needle:", needle)
+	fmt.Println("----")
+	for key := 0; key < lastHaystackIndex; key++ {
+		fmt.Println("sample:", haystack[key:key+len(needle)])
+		if haystack[key:key+len(needle)] == needle {
+			return key
+		}
+	}
+	return -1
 }
