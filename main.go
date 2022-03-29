@@ -12,7 +12,7 @@ func Sort(input []toWork) {
 
 	var i1, i2 int
 	//rightGap = float64(length - 1)
-	for gap := length - 1; gap > 0; gap -= reducer(gap) {
+	for gap := length - 1; gap > 0; gap -= shrinkFactorReducer(gap) {
 		for i1, i2 = 0, gap; i2 < length; i1++ {
 			if input[i1].id > input[i2].id {
 				//log.Println("changing", input[i1], input[i2])
@@ -76,12 +76,12 @@ func (n *Node) addNode(id int) {
 
 var rightGap float64
 
-func reducer(gap int) int {
+func shrinkFactorReducer(gap int) int {
 	//rightGap = float64(int((rightGap / 1.3) + .5))
 	if gap < 9 {
 		return 1
 	}
-	return gap >> 2
+	return int(float64(gap) / 1.3)
 }
 
 type toWork struct {
